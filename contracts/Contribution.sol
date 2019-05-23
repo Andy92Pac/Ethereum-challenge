@@ -47,7 +47,7 @@ contract Contribution {
      * contribution is done after the _startTime and before the _endTime
      */
 	function contribute() public payable {
-		require(int(msg.value) > 0, 'Amount is zero or negative');
+		require(msg.value > 0, 'Amount is zero');
 
 		m_contributions[msg.sender] = m_contributions[msg.sender].add(msg.value);
 

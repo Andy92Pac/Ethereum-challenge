@@ -57,12 +57,20 @@ contract('Contribution', ([minter, contributor, ...accounts]) => {
 		let newBalance = await web3.eth.getBalance(contributor);
 
 		assert.deepEqual(newBalance, expectedBalanceWithGas.toString(), "Balance incorrect");
+	})
+
+	it('should have the correct amount of tokens in contributor balance', async () => {
 
 		let tokenBalance = await token.balanceOf(contributor);
+		let contributionAmount = web3.utils.toWei('1', 'ether');
 		
 		assert.deepEqual(tokenBalance.toString(), contributionAmount, "Token balance incorrect");
+	})
+
+	it('should return the correct contribution from contributor address', async () => {
 
 		let savedContribution = await contribution.getContribution(contributor);
+		let contributionAmount = web3.utils.toWei('1', 'ether');
 
 		assert.deepEqual(savedContribution.toString(), contributionAmount, "Saved contribution incorrect");
 	})
