@@ -36,7 +36,7 @@ contract('Contribution', ([minter, contributor, ...accounts]) => {
 		let actualBalance = await web3.eth.getBalance(contributor);
 		let contributionAmount = web3.utils.toWei('1', 'ether');
 
-		var txReceipt = await contribution.contribute({from: contributor, value: contributionAmount});
+		let txReceipt = await contribution.contribute({from: contributor, value: contributionAmount});
 
 		await expectEvent.inTransaction(
 			txReceipt.tx,
@@ -47,10 +47,10 @@ contract('Contribution', ([minter, contributor, ...accounts]) => {
 				contribution: contributionAmount
 			});
 
-		var tx = await web3.eth.getTransaction(txReceipt.tx);
-		var gasUsed = txReceipt.receipt.gasUsed;
-		var gasPrice = tx.gasPrice;
-		var gasCost = new BN(gasPrice).mul(new BN(gasUsed));
+		let tx = await web3.eth.getTransaction(txReceipt.tx);
+		let gasUsed = txReceipt.receipt.gasUsed;
+		let gasPrice = tx.gasPrice;
+		let gasCost = new BN(gasPrice).mul(new BN(gasUsed));
 
 		let expectedBalance = new BN(actualBalance).sub(new BN(contributionAmount));
 		let expectedBalanceWithGas = expectedBalance.sub(gasCost);
