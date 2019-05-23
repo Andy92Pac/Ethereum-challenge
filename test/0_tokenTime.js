@@ -1,13 +1,13 @@
 const Token = artifacts.require('./../Token.sol');
 const { balance, BN, constants, ether, expectEvent, shouldFail } = require('openzeppelin-test-helpers');
 
-contract('Token', accounts => {
+contract('Token', ([minter, ...accounts]) => {
 
 	const date = new Date();
 	const now = parseInt(date.getTime() / 1000);
 
 	it('should create contract and log start and end time', async () => {
-		const instance =  await Token.new(now - 1000, now + 1000);
+		const instance =  await Token.new(now - 1000, now + 1000, { from: minter });
 
 		await expectEvent.inConstruction(
 			instance, 
@@ -19,25 +19,25 @@ contract('Token', accounts => {
 	})
 
 	it('should mint and log', async () => {
-		const instance =  await Token.new(now - 1000, now + 1000);
+		const instance =  await Token.new(now - 1000, now + 1000, { from: minter });
 
-		var txReceipt = await instance.mint(accounts[0], 1000);
+		var txReceipt = await instance.mint(minter, 1000);
 
 		await expectEvent.inTransaction(
 			txReceipt.tx, 
 			Token,
 			'LogMint',
 			{
-				to: accounts[0],
+				to: minter,
 				amount: new BN(1000)
 			});
 	})
 
 	it('should revert because mint has not started yet', async () => {
 		await shouldFail.reverting.withMessage(
-			Token.new(now + 1000, now + 1000)
+			Token.new(now + 1000, now + 1000, { from: minter })
 			.then(async (instance) => {
-				await instance.mint(accounts[0], 1000);
+				await instance.mint(minter, 1000);
 			}),
 			'Mint has not started yet'
 			);
@@ -46,9 +46,9 @@ contract('Token', accounts => {
 
 	it('should revert because mint is over now', async () => {
 		await shouldFail.reverting.withMessage(
-			Token.new(now - 1000, now - 1000)
+			Token.new(now - 1000, now - 1000, { from: minter })
 			.then(async (instance) => {
-				await instance.mint(accounts[0], 1000);
+				await instance.mint(minter, 1000);
 			}),
 			'Mint is over now'
 			);

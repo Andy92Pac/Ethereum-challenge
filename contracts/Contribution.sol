@@ -23,7 +23,7 @@ contract Contribution {
      * @param contribution Amount of wei donated in this specific contribution
      * @param contribution Total amount of wei donated by this specific contributor
      */
-	event LogContribution(address indexed contributor, uint contribution, uint totalContribution);
+	event LogContribution(address indexed contributor, uint contribution);
 
 	// Token contract reference
 	Token public _token;
@@ -47,11 +47,11 @@ contract Contribution {
      * contribution is done after the _startTime and before the _endTime
      */
 	function contribute() public payable {
-		require(msg.value > 0);
+		require(int(msg.value) > 0, 'Amount is zero or negative');
 
 		m_contributions[msg.sender] = m_contributions[msg.sender].add(msg.value);
 
-		emit LogContribution(msg.sender, msg.value, m_contributions[msg.sender]);
+		emit LogContribution(msg.sender, msg.value);
 
 		_token.mint(msg.sender, msg.value);
 	}
