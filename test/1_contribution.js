@@ -1,7 +1,7 @@
 const Token = artifacts.require('./../Token.sol');
 const Contribution = artifacts.require('./../Contribution.sol');
 
-const { balance, BN, constants, ether, expectEvent, shouldFail } = require('openzeppelin-test-helpers');
+const { BN, expectEvent, shouldFail } = require('openzeppelin-test-helpers');
 
 contract('Contribution', ([minter, contributor, ...accounts]) => {
 

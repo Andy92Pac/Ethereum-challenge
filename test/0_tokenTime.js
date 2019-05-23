@@ -1,5 +1,5 @@
 const Token = artifacts.require('./../Token.sol');
-const { balance, BN, constants, ether, expectEvent, shouldFail } = require('openzeppelin-test-helpers');
+const { BN, expectEvent, shouldFail } = require('openzeppelin-test-helpers');
 
 contract('Token', ([minter, ...accounts]) => {
 
@@ -21,7 +21,7 @@ contract('Token', ([minter, ...accounts]) => {
 	it('should mint and log', async () => {
 		const instance =  await Token.new(now - 1000, now + 1000, { from: minter });
 
-		var txReceipt = await instance.mint(minter, 1000);
+		let txReceipt = await instance.mint(minter, 1000);
 
 		await expectEvent.inTransaction(
 			txReceipt.tx, 
