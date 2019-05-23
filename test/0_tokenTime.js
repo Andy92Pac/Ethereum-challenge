@@ -6,11 +6,31 @@ contract('Token', accounts => {
 	const date = new Date();
 	const now = parseInt(date.getTime() / 1000);
 
-	it('should correctly mint', () => {
-		return Token.new(now - 1000, now + 1000)
-		.then(async (instance) => {
-			await instance.mint(accounts[0], 1000);
-		})
+	it('should create contract and log start and end time', async () => {
+		const instance =  await Token.new(now - 1000, now + 1000);
+
+		await expectEvent.inConstruction(
+			instance, 
+			'LogTokenContractCreated', 
+			{ 
+				startTime : new BN(now - 1000),
+				endTime : new BN(now + 1000)
+			});
+	})
+
+	it('should mint and log', async () => {
+		const instance =  await Token.new(now - 1000, now + 1000);
+
+		var txReceipt = await instance.mint(accounts[0], 1000);
+
+		await expectEvent.inTransaction(
+			txReceipt.tx, 
+			Token,
+			'LogMint',
+			{
+				to: accounts[0],
+				amount: new BN(1000)
+			});
 	})
 
 	it('should revert because mint has not started yet', async () => {
